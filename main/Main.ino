@@ -5,8 +5,8 @@
 #include <ArduinoJson.h>
 #include <WiFi.h>
 
-#include "controleReles.h"
-#include "conRede.h"
+#include "classes/controleReles.h"
+#include "classes/conRede.h"
 #include "debug.h"
 
 // Define os pinos para os relés
@@ -24,6 +24,10 @@
 
 // Cria um servidor HTTP na porta 80
 AsyncWebServer server(80);
+
+// Cria os objetos que serão utilizados
+conRede ConexaoRede;
+controleReles conReles;
 
 void setup() {
     // Inicializa a comunicação serial com uma taxa de 115200 bps
@@ -63,8 +67,8 @@ void setup() {
     }
 
     // Faz a chamada da função que faz conexão com o Wifi
-    redeCon();
-    
+    ConexaoRede.redeCon();
+
     // Configuração das rotas do servidor web
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(LittleFS, "/index.html", "text/html");
@@ -75,7 +79,7 @@ void setup() {
 
     // Inicializa os Relés no estado anterior
     int Reles[] = {Rele1, Rele2, Rele3, Rele4, Rele5, Rele6, Rele7, Rele8};
-    estadoReles(Reles);
+    conReles.estadoReles(Reles);
 }
 
 void loop() {
@@ -90,21 +94,21 @@ void Site() {
     // Adicione outras rotas para seus recursos, como CSS e JavaScript
     server.serveStatic("/", LittleFS, "/");
     // Verifica se a solicitação contém Rele1
-    server.on("/rele1", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele1, request, nRele = 1); });
+    server.on("/rele1", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele1, request, nRele = 1); });
     // Verifica se a solicitação contém Rele2
-    server.on("/rele2", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele2, request, nRele = 2); });
+    server.on("/rele2", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele2, request, nRele = 2); });
     // Verifica se a solicitação contém Rele3
-    server.on("/rele3", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele3, request, nRele = 3); });
+    server.on("/rele3", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele3, request, nRele = 3); });
     // Verifica se a solicitação contém Rele4
-    server.on("/rele4", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele4, request, nRele = 4); });
+    server.on("/rele4", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele4, request, nRele = 4); });
     // Verifica se a solicitação contém Rele5
-    server.on("/rele5", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele5, request, nRele = 5); });
+    server.on("/rele5", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele5, request, nRele = 5); });
     // Verifica se a solicitação contém Rele6
-    server.on("/rele6", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele6, request, nRele = 6); });
+    server.on("/rele6", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele6, request, nRele = 6); });
     // Verifica se a solicitação contém Rele7
-    server.on("/rele7", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele7, request, nRele = 7); });
+    server.on("/rele7", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele7, request, nRele = 7); });
     // Verifica se a solicitação contém Rele8
-    server.on("/rele8", HTTP_GET, [](AsyncWebServerRequest *request){ ligadesliga(Rele8, request, nRele = 8); });
+    server.on("/rele8", HTTP_GET, [](AsyncWebServerRequest *request){ conReles.ligadesliga(Rele8, request, nRele = 8); });
     // Inicia o servidor
     server.begin();
     Serial.println("Servidor Iniciado");

@@ -1,12 +1,11 @@
-// Variáveis para armazenar as informações de configuração
-IPAddress ip;
-String ssidConfig;
-String passwordConfig;
-IPAddress gatewayConfig;
+#include <LittleFS.h>
+#include <ArduinoJson.h>
+#include <WiFi.h>
+
+#include "classes/conRede.h"
 
 // Função que faz a leitura do Arquivo Json
-
-void configIp() {
+void conRede::configIp() {
     // Abre o arquivo JSON em modo de leitura
     File configFile = LittleFS.open("/configWifi.json", "r");
     if (!configFile) {
@@ -39,7 +38,7 @@ void configIp() {
     configFile.close();
 }
 
-void redeCon() {
+void conRede::redeCon() {
 
     // Faz a chamada da função que coleta as informações do arquivo
     configIp();

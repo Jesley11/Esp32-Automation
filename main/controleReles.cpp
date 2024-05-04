@@ -1,5 +1,12 @@
+#include <ESPAsyncWebSrv.h>
+#include <LittleFS.h>
+#include <Arduino.h>
+#include <ArduinoJson.h>
+
+#include "classes/controleReles.h"
+
 // Função para atualizar o estado do relé no arquivo
-void atualizarEstadoRele(int nReles, bool estadoRele) {
+void controleReles::atualizarEstadoRele(int nReles, bool estadoRele) {
     // Abre o arquivo "estado_reles.json" em modo de leitura e gravação
     File arquivo = LittleFS.open("/estado_reles.json", "r+");
 
@@ -54,7 +61,7 @@ void atualizarEstadoRele(int nReles, bool estadoRele) {
 }
 
 // Função que liga ou desliga o relé e atualiza o estado no arquivo
-void ligadesliga(int Rele, AsyncWebServerRequest *request, int nReles) {
+void controleReles::ligadesliga(int Rele, AsyncWebServerRequest *request, int nReles) {
     // Verifica se o relé está ligado (LOW) ou desligado (HIGH)
     if (digitalRead(Rele) == HIGH) {
         digitalWrite(Rele, LOW); // Liga o relé (LOW)
@@ -68,7 +75,7 @@ void ligadesliga(int Rele, AsyncWebServerRequest *request, int nReles) {
 }
 
 // Fução que Liga o Rele no seu estado anterior 
-void estadoAnterior(int nRele, int Rele[], bool estadoRele) {
+void controleReles::estadoAnterior(int nRele, int Rele[], bool estadoRele) {
     if (estadoRele == true) {
         digitalWrite(Rele[nRele - 1], LOW); // Liga o Relé (LOW)
 
@@ -77,8 +84,8 @@ void estadoAnterior(int nRele, int Rele[], bool estadoRele) {
     }
 }
 
-//Carrega o estado anterior dos reles
-void estadoReles(int Reles[]) {
+// Carrega o estado anterior dos reles
+void controleReles::estadoReles(int Reles[]) {
     // Abre o arquivo "estado_reles.json" em modo de leitura e gravação
     File arquivo = LittleFS.open("/estado_reles.json", "r");
 
